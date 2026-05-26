@@ -3,14 +3,20 @@ using UnityEngine.AI;
 
 public class PlayerNavMesh : MonoBehaviour
 {
-    [SerializeField] private Transform moveTransformPosition; // Assign in Inspector
+    [SerializeField] private Transform moveTransformPosition; 
+    [SerializeField] private float movementSpeed = 8f; // Add your desired speed here
     private NavMeshAgent navMeshAgent;
- 
 
-    private void Awake() // Correct method name
+    private void Awake() 
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-        if (navMeshAgent == null)
+        if (navMeshAgent != null)
+        {
+            // This overrides the Inspector speed value
+            navMeshAgent.speed = movementSpeed; 
+            navMeshAgent.acceleration = movementSpeed * 2f; // Helps reach top speed faster
+        }
+        else
         {
             Debug.LogError("NavMeshAgent component is missing from this GameObject.");
         }
@@ -21,13 +27,6 @@ public class PlayerNavMesh : MonoBehaviour
         if (navMeshAgent != null && moveTransformPosition != null)
         {
             navMeshAgent.SetDestination(moveTransformPosition.position);
-        }
-        else
-        {
-            if (moveTransformPosition == null)
-            {
-                Debug.LogWarning("moveTransformPosition is not assigned in the Inspector.");
-            }
         }
     }
 }
